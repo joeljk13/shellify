@@ -3,7 +3,7 @@ Shellify
 
 Turn a command into an interactive shell. This script is designed for use
 within zsh, although it probably wouldn't be too hard to get it to support
-bash, too. This was inspired by [this shellify
+bash, too. This was partially inspired by [another shellify
 script](https://github.com/clehner/shellify), but the code is very different
 and they have different features.
 
@@ -41,4 +41,5 @@ Examples
     nothing to commit, working directory clean
     g » !ls
     README.md
-    g »
+    g » exit
+    $
