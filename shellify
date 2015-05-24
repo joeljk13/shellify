@@ -1,0 +1,57 @@
+#!/usr/bin/env zsh
+
+usage="usage: $0 <command> [<prompt>]"
+
+if [[ $# = 0 ]]; then
+    echo "$0: expected command" >&2
+    echo $usage >&2
+    exit 1
+fi
+
+if [[ $# > 2 ]]; then
+    echo "$0: too many arguments" >&2
+    echo $usage >&2
+    exit 1
+fi
+
+if [[ $# = 1 && $1 = "--help" ]]; then
+    echo $usage
+    exit
+fi
+
+[[ -f ~/.zshrc ]] && source ~/.zshrc
+
+cmd=$1
+
+if ! command -v "$cmd" >/dev/null; then
+    echo "$0: command '$cmd' not found" >&2
+    echo $usage >&2
+    exit 126
+fi
+
+[[ $# = 2 ]] && cmd_prompt=$2 || \
+    cmd_prompt="${fg[green]}$cmd$reset_color ${fg[blue]}»$reset_color "
+
+loop()
+{
+    local line
+
+    while true; do
+        trap 'echo; continue' SIGINT
+        read -r line?$cmd_prompt || break
+        trap - SIGINT
+
+        [[ -z $line ]] && continue
+        [[ $line = "clear" ]] && clear && continue
+        [[ $line = "exit" ]] && break
+
+        if [[ $(head -c1 <<< $line) = "!" ]]; then
+            eval $(tail -c +2 <<< $line)
+        else
+            eval "$cmd $line"
+        fi
+    done
+}
+
+loop
+echo
