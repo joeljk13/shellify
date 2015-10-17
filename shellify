@@ -38,7 +38,7 @@ loop()
 
     while true; do
         trap 'echo; continue' SIGINT
-        read -r line?$cmd_prompt || break
+        read -r line\?$cmd_prompt || break
         trap - SIGINT
 
         [[ -z $line ]] && continue
